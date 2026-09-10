@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Consulta Electoral | Sistema de Consulta</title>
+
+    <!-- ICONOS -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+
+        /* ================================
+           CONFIGURACIÓN GENERAL
+        ================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --secondary: #14b8a6;
+            --background: #f1f5f9;
+            --dark: #0f172a;
+            --text: #334155;
+            --muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+
+        /* ================================
+           HEADER
+        ================================= */
+
+        .header {
+            background: linear-gradient(
+                135deg,
+                #0f172a,
+                #134e4a,
+                #0f766e
+            );
+
+            padding: 35px 20px 100px;
+            color: white;
+        }
+
+        .navbar {
+            max-width: 1250px;
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+
+            border-radius: 12px;
+        }
+
+        .badge {
+            padding: 7px 13px;
+            border-radius: 30px;
+
+            background: rgba(255,255,255,0.12);
+
+            font-size: 13px;
+        }
+
+
+        /* ================================
+           HERO
+        ================================= */
+
+        .hero {
+            max-width: 800px;
+            margin: 50px auto 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .hero p {
+            font-size: 17px;
+            line-height: 1.7;
+            color: #ccfbf1;
+        }
+
+
+        /* ================================
+           CONTENEDOR PRINCIPAL
+        ================================= */
+
+        .main-container {
+            max-width: 1250px;
+            margin: -60px auto 50px;
+            padding: 0 20px;
+        }
+
+
+        /* ================================
+           OPCIONES
+        ================================= */
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .option-card {
+            background: white;
+            border-radius: 18px;
+            padding: 30px;
+
+            box-shadow:
+                0 10px 35px rgba(15, 23, 42, 0.10);
+
+            border: 1px solid var(--border);
+
+            transition: 0.3s;
+        }
+
+        .option-card:hover {
+            transform: translateY(-4px);
+
+            box-shadow:
+                0 18px 45px rgba(15, 23, 42, 0.15);
+        }
+
+        .option-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            margin-bottom: 12px;
+        }
+
+        .option-icon {
+            width: 50px;
+            height: 50px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 14px;
+
+            background: #ccfbf1;
+            color: var(--primary);
+
+            font-size: 21px;
+        }
+
+        .option-title h2 {
+            color: var(--dark);
+            font-size: 20px;
+        }
+
+        .option-title span {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .description {
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 14px;
+
+            margin: 18px 0;
+        }
+
+
+        /* ================================
+           TEXTAREA
+        ================================= */
+
+        textarea {
+            width: 100%;
+            height: 150px;
+
+            padding: 15px;
+
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+
+            resize: vertical;
+
+            outline: none;
+
+            font-family: monospace;
+            font-size: 15px;
+
+            transition: 0.2s;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+
+            box-shadow:
+                0 0 0 3px rgba(15,118,110,0.12);
+        }
+
+        .input-info {
+            margin-top: 8px;
+
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+
+        /* ================================
+           SUBIR EXCEL
+        ================================= */
+
+        .upload-area {
+            border: 2px dashed #94a3b8;
+
+            border-radius: 12px;
+
+            padding: 30px 20px;
+
+            text-align: center;
+
+            background: #f8fafc;
+
+            transition: 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: #f0fdfa;
+        }
+
+        .upload-icon {
+            font-size: 40px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .upload-area p {
+            color: var(--text);
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .upload-area span {
+            display: block;
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            margin-bottom: 18px;
+        }
+
+        input[type="file"] {
+            width: 100%;
+
+            padding: 10px;
+
+            background: white;
+
+            border: 1px solid var(--border);
+
+            border-radius: 8px;
+        }
+
+
+        /* ================================
+           BOTONES
+        ================================= */
+
+        .btn {
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 14px 20px;
+
+            border: none;
+            border-radius: 10px;
+
+            font-size: 15px;
+            font-weight: 600;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-excel {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-excel:hover {
+            background: #15803d;
+        }
+
+
+        /* ================================
+           MENSAJES
+        ================================= */
+
+        .alert {
+            margin-top: 25px;
+            padding: 15px 18px;
+
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .alert-success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+
+        /* ================================
+           RESULTADOS
+        ================================= */
+
+        .results-card {
+            margin-top: 30px;
+
+            background: white;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 35px rgba(15,23,42,0.10);
+
+            border: 1px solid var(--border);
+
+            overflow: hidden;
+        }
+
+        .results-header {
+            padding: 25px 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .results-header h2 {
+            color: var(--dark);
+            font-size: 21px;
+        }
+
+        .results-header p {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .counter {
+            background: #ccfbf1;
+            color: var(--primary-dark);
+
+            padding: 8px 13px;
+
+            border-radius: 30px;
+
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+
+        /* ================================
+           TABLA
+        ================================= */
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1100px;
+
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #f8fafc;
+        }
+
+        th {
+            text-align: left;
+
+            padding: 14px 18px;
+
+            color: #475569;
+
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 16px 18px;
+
+            border-bottom: 1px solid #f1f5f9;
+
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .dni {
+            font-family: monospace;
+            font-weight: 700;
+        }
+
+
+        /* ================================
+           ESTADOS
+        ================================= */
+
+        .status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-valid {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-invalid {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: currentColor;
+        }
+
+
+        /* ================================
+           DESCARGAR
+        ================================= */
+
+        .download-area {
+            padding: 20px 30px 28px;
+        }
+
+
+        /* ================================
+           FOOTER
+        ================================= */
+
+        footer {
+            text-align: center;
+
+            padding: 25px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+        }
+
+
+        /* ================================
+           RESPONSIVE
+        ================================= */
+
+        @media(max-width: 850px) {
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================
+     HEADER
+====================================== -->
+
+<header class="header">
+
+    <nav class="navbar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                <i class="fa-solid fa-check-to-slot"></i>
+            </div>
+
+            Consulta Electoral
+
+        </div>
+
+        <div class="badge">
+            Flask + Selenium + Docker
+        </div>
+
+    </nav>
+
+
+    <div class="hero">
+
+        <h1>
+            Sistema de Consulta Electoral
+        </h1>
+
+        <p>
+            Consulta información electoral mediante DNI.
+            Puedes ingresar los números manualmente o procesar
+            una lista desde un archivo Excel.
+        </p>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================
+     CONTENIDO
+====================================== -->
+
+<main class="main-container">
+
+
+    <div class="options-grid">
+
+
+        <!-- =================================
+             OPCIÓN 1
+        ================================== -->
+
+        <section class="option-card">
+
+
+            <div class="option-header">
+
+                <div class="option-icon">
+                    <i class="fa-solid fa-keyboard"></i>
+                </div>
+
+
+                <div class="option-title">
+
+                    <h2>
+                        Ingresar DNI
+                    </h2>
+
+                    <span>
+                        Opción 1 · Entrada manual
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <p class="description">
+
+                Escribe uno o varios números de DNI.
+                Para consultar varias personas, coloca
+                un DNI diferente en cada línea.
+
+            </p>
+
+
+            <form
+                action="/consultar"
+                method="POST"
+                onsubmit="activarCarga(this)"
+            >
+
+
+                <textarea
+                    name="dnis"
+                    placeholder="Ejemplo:&#10;10526358&#10;15121313&#10;15161414"
+                    required
+                ></textarea>
+
+
+                <div class="input-info">
+
+                    <i class="fa-solid fa-circle-info"></i>
+
+                    Cada DNI debe contener exactamente 8 dígitos.
+
+                </div>
+
+
+                <button
+                    class="btn btn-primary"
+                    type="submit"
+                >
+
+                    <i class="fa-solid fa-magnifying-glass"></i>
+
+                    <span>
+                        Consultar DNI
+                    </span>
+
+                </button>
+
+
+            </form>
+
+
+        </section>
+
+
+
+        <!-- =================================
+             OPCIÓN 2
+        ================================== -->
+
+        <section class="option-card">
+
+
+            <div class="option-header">
+
+                <div class="option-icon">
+                    <i class="fa-solid fa-file-excel"></i>
+                </div>
+
+
+                <div class="option-title">
+
+                    <h2>
+                        Subir archivo Excel
+                    </h2>
+
+                    <span>
+                        Opción 2 · Procesamiento por archivo
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <p class="description">
+
+                Procesa una lista completa de DNI desde
+                un archivo Excel. El archivo debe contener
+                una columna llamada <strong>dni</strong>.
+
+            </p>
+
+
+            <form
+                action="/subir-excel"
+                method="POST"
+                enctype="multipart/form-data"
+                onsubmit="activarCarga(this)"
+            >
+
+
+                <div class="upload-area">
+
+                    <div class="upload-icon">
+
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+
+                    </div>
+
+
+                    <p>
+                        Selecciona tu archivo Excel
+                    </p>
+
+
+                    <span>
+                        Formato permitido: .xlsx
+                    </span>
+
+
+                    <input
+                        type="file"
+                        name="archivo"
+                        accept=".xlsx"
+                        required
+                    >
+
+
+                </div>
+
+
+                <button
+                    class="btn btn-primary"
+                    type="submit"
+                >
+
+                    <i class="fa-solid fa-gears"></i>
+
+                    <span>
+                        Procesar Excel
+                    </span>
+
+                </button>
+
+
+            </form>
+
+
+        </section>
+
+
+    </div>
+
+
+
+    <!-- =====================================
+         ERRORES
+    ====================================== -->
+
+    {% if error %}
+
+    <div class="alert alert-error">
+
+        <i class="fa-solid fa-circle-exclamation"></i>
+
+        {{ error }}
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================
+         MENSAJE
+    ====================================== -->
+
+    {% if mensaje %}
+
+    <div class="alert alert-success">
+
+        <i class="fa-solid fa-circle-check"></i>
+
+        {{ mensaje }}
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =====================================
+         RESULTADOS
+    ====================================== -->
+
+    {% if resultados %}
+
+
+    <section class="results-card">
+
+
+        <div class="results-header">
+
+
+            <div>
+
+                <h2>
+                    Resultados de la consulta
+                </h2>
+
+                <p>
+                    Información obtenida para los DNI procesados.
+                </p>
+
+            </div>
+
+
+            <div class="counter">
+
+                {{ resultados|length }}
+
+                resultado{% if resultados|length != 1 %}s{% endif %}
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="table-container">
+
+
+            <table>
+
+
+                <thead>
+
+                    <tr>
+
+                        <th>DNI</th>
+
+                        <th>Estado</th>
+
+                        <th>Miembro de mesa</th>
+
+                        <th>Nombres</th>
+
+                        <th>Región</th>
+
+                        <th>Provincia</th>
+
+                        <th>Distrito</th>
+
+                        <th>Dirección</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for r in resultados %}
+
+
+                    <tr>
+
+
+                        <td class="dni">
+
+                            {{ r.dni }}
+
+                        </td>
+
+
+                        <td>
+
+
+                            {% if r.valido %}
+
+                            <span class="status status-valid">
+
+                                <span class="dot"></span>
+
+                                Válido
+
+                            </span>
+
+
+                            {% else %}
+
+
+                            <span class="status status-invalid">
+
+                                <span class="dot"></span>
+
+                                Inválido
+
+                            </span>
+
+
+                            {% endif %}
+
+
+                        </td>
+
+
+                        <td>
+                            {{ r.miembro_mesa }}
+                        </td>
+
+
+                        <td>
+                            {{ r.nombres }}
+                        </td>
+
+
+                        <td>
+                            {{ r.region }}
+                        </td>
+
+
+                        <td>
+                            {{ r.provincia }}
+                        </td>
+
+
+                        <td>
+                            {{ r.distrito }}
+                        </td>
+
+
+                        <td>
+                            {{ r.direccion }}
+                        </td>
+
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
+
+
+
+        <!-- =================================
+             DESCARGAR EXCEL
+        ================================== -->
+
+        <div class="download-area">
+
+
+            <form
+                action="/descargar"
+                method="POST"
+            >
+
+
+                {% for r in resultados %}
+
+
+                <input
+                    type="hidden"
+                    name="dni"
+                    value="{{ r.dni }}"
+                >
+
+
+                <input
+                    type="hidden"
+                    name="miembro_mesa"
+                    value="{{ r.miembro_mesa }}"
+                >
+
+
+                <input
+                    type="hidden"
+                    name="nombres"
+                    value="{{ r.nombres }}"
+                >
+
+
+                <input
+                    type="hidden"
+                    name="region"
+                    value="{{ r.region }}"
+                >
+
+
+                <input
+                    type="hidden"
+                    name="provincia"
+                    value="{{ r.provincia }}"
+                >
+
+
+                <input
+                    type="hidden"
+                    name="distrito"
+                    value="{{ r.distrito }}"
+                >
+
+
+                <input
+                    type="hidden"
+                    name="direccion"
+                    value="{{ r.direccion }}"
+                >
+
+
+                {% endfor %}
+
+
+                <button
+                    class="btn btn-excel"
+                    type="submit"
+                >
+
+                    <i class="fa-solid fa-file-arrow-down"></i>
+
+                    Descargar resultados en Excel
+
+                </button>
+
+
+            </form>
+
+
+        </div>
+
+
+    </section>
+
+
+    {% endif %}
+
+
+</main>
+
+
+
+<!-- =====================================
+     FOOTER
+====================================== -->
+
+<footer>
+
+    <i class="fa-solid fa-cloud"></i>
+
+    Desarrollo de Soluciones en la Nube
+    · Flask · Selenium · Docker
+
+</footer>
+
+
+
+<!-- =====================================
+     JAVASCRIPT
+====================================== -->
+
+<script>
+
+    function activarCarga(formulario) {
+
+        const boton =
+            formulario.querySelector("button[type='submit']");
+
+        if (!boton) {
+            return;
+        }
+
+        boton.disabled = true;
+
+        boton.innerHTML = `
+            <i class="fa-solid fa-spinner fa-spin"></i>
+            Procesando consulta...
+        `;
+
+    }
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,39 @@
+# Entorno virtual de Python
+venv/
+.venv/
+env/
+
+# Caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos temporales
+*.tmp
+*.log
+*.part
+
+# Videos y archivos descargados
+downloads/*
+!downloads/.gitkeep
+
+# Variables de entorno
+.env
+.env.*
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Visual Studio Code
+.vscode/
+
+# PyCharm
+.idea/
+
+# Archivos generados durante pruebas
+respuesta_*.html
+
+# Excel temporales
+*.xlsx
+*.xls

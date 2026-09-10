@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MediaFlow | Video Downloader</title>
+
+    <!-- Iconos -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: white;
+            overflow-x: hidden;
+
+            background:
+                radial-gradient(circle at 20% 20%, #243b84 0%, transparent 35%),
+                radial-gradient(circle at 80% 70%, #6b21a8 0%, transparent 35%),
+                linear-gradient(
+                    135deg,
+                    #050816,
+                    #0b1128,
+                    #111827
+                );
+        }
+
+
+        /* =========================
+           FONDO ANIMADO
+        ========================== */
+
+        .background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -2;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(12px);
+            opacity: .45;
+            animation: floating 9s infinite ease-in-out;
+        }
+
+        .orb1 {
+            width: 280px;
+            height: 280px;
+            background: #2563eb;
+            top: 5%;
+            left: 8%;
+        }
+
+        .orb2 {
+            width: 350px;
+            height: 350px;
+            background: #7c3aed;
+            right: 5%;
+            bottom: 5%;
+            animation-delay: -3s;
+        }
+
+        .orb3 {
+            width: 200px;
+            height: 200px;
+            background: #06b6d4;
+            top: 55%;
+            left: 35%;
+            animation-delay: -6s;
+        }
+
+        @keyframes floating {
+
+            0%, 100% {
+                transform:
+                    translateY(0)
+                    translateX(0)
+                    scale(1);
+            }
+
+            50% {
+                transform:
+                    translateY(-45px)
+                    translateX(25px)
+                    scale(1.08);
+            }
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================== */
+
+        nav {
+            width: 100%;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 0 7%;
+
+            backdrop-filter: blur(20px);
+
+            border-bottom:
+                1px solid rgba(255,255,255,.08);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            font-size: 23px;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+
+            border-radius: 13px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #3b82f6,
+                    #8b5cf6
+                );
+
+            box-shadow:
+                0 10px 30px rgba(59,130,246,.4);
+
+            transform:
+                perspective(500px)
+                rotateY(-15deg);
+        }
+
+        .nav-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            color: #cbd5e1;
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 9px;
+            height: 9px;
+
+            background: #22c55e;
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 14px #22c55e;
+
+            animation:
+                pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            50% {
+                opacity: .45;
+            }
+        }
+
+
+        /* =========================
+           CONTENIDO
+        ========================== */
+
+        main {
+            min-height:
+                calc(100vh - 80px);
+
+            display: flex;
+            flex-direction: column;
+
+            align-items: center;
+            justify-content: center;
+
+            padding: 50px 20px;
+        }
+
+
+        .badge {
+            padding: 8px 18px;
+
+            border:
+                1px solid rgba(96,165,250,.35);
+
+            border-radius: 30px;
+
+            background:
+                rgba(59,130,246,.10);
+
+            backdrop-filter:
+                blur(10px);
+
+            font-size: 13px;
+
+            color: #93c5fd;
+
+            margin-bottom: 20px;
+
+            animation:
+                fadeDown .8s ease;
+        }
+
+
+        h1 {
+            text-align: center;
+            max-width: 900px;
+
+            font-size:
+                clamp(42px, 7vw, 76px);
+
+            line-height: 1.05;
+
+            letter-spacing: -3px;
+
+            margin-bottom: 18px;
+
+            animation:
+                fadeUp .8s ease;
+        }
+
+        .gradient-text {
+            background:
+                linear-gradient(
+                    90deg,
+                    #60a5fa,
+                    #22d3ee,
+                    #a78bfa
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+
+        .subtitle {
+            max-width: 650px;
+
+            text-align: center;
+
+            color: #94a3b8;
+
+            font-size: 18px;
+
+            line-height: 1.7;
+
+            margin-bottom: 38px;
+
+            animation:
+                fadeUp 1s ease;
+        }
+
+
+        /* =========================
+           TARJETA PRINCIPAL
+        ========================== */
+
+        .download-card {
+            width: 100%;
+            max-width: 780px;
+
+            padding: 34px;
+
+            border-radius: 28px;
+
+            background:
+                rgba(15,23,42,.70);
+
+            border:
+                1px solid rgba(255,255,255,.12);
+
+            backdrop-filter:
+                blur(25px);
+
+            box-shadow:
+                0 40px 100px
+                rgba(0,0,0,.45);
+
+            transform-style:
+                preserve-3d;
+
+            transition:
+                transform .15s ease;
+
+            animation:
+                appear 1s ease;
+        }
+
+
+        .download-title {
+            font-size: 15px;
+            color: #cbd5e1;
+            margin-bottom: 12px;
+        }
+
+
+        .input-container {
+            display: flex;
+
+            background:
+                rgba(2,6,23,.55);
+
+            border:
+                1px solid rgba(148,163,184,.20);
+
+            border-radius: 17px;
+
+            padding: 7px;
+
+            transition: .3s;
+        }
+
+
+        .input-container:focus-within {
+            border-color:
+                rgba(59,130,246,.8);
+
+            box-shadow:
+                0 0 0 4px
+                rgba(59,130,246,.12);
+        }
+
+
+        .input-icon {
+            width: 50px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            color: #60a5fa;
+
+            font-size: 19px;
+        }
+
+
+        input {
+            flex: 1;
+
+            min-width: 0;
+
+            border: none;
+            outline: none;
+
+            background: transparent;
+
+            color: white;
+
+            font-size: 15px;
+
+            padding: 14px 8px;
+        }
+
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+
+        button {
+            border: none;
+
+            padding: 0 25px;
+
+            border-radius: 12px;
+
+            color: white;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+
+            box-shadow:
+                0 12px 30px
+                rgba(37,99,235,.35);
+
+            transition: .3s;
+
+            min-width: 150px;
+        }
+
+
+        button:hover {
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 18px 40px
+                rgba(124,58,237,.45);
+        }
+
+
+        button:active {
+            transform:
+                translateY(1px)
+                scale(.98);
+        }
+
+
+        /* =========================
+           PLATAFORMAS
+        ========================== */
+
+        .platform-label {
+            text-align: center;
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            margin:
+                26px 0 15px;
+        }
+
+
+        .platforms {
+            display: flex;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            gap: 13px;
+        }
+
+
+        .platform {
+            width: 58px;
+            height: 58px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 17px;
+
+            background:
+                rgba(255,255,255,.05);
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            font-size: 24px;
+
+            transition:
+                .35s;
+
+            transform:
+                perspective(500px);
+        }
+
+
+        .platform:hover {
+
+            transform:
+                perspective(500px)
+                translateY(-8px)
+                rotateX(12deg)
+                rotateY(-10deg)
+                scale(1.08);
+
+            background:
+                rgba(255,255,255,.11);
+
+            box-shadow:
+                0 18px 30px
+                rgba(0,0,0,.35);
+        }
+
+
+        .youtube {
+            color: #ff3838;
+        }
+
+        .instagram {
+            color: #e1306c;
+        }
+
+        .tiktok {
+            color: white;
+        }
+
+        .facebook {
+            color: #3b82f6;
+        }
+
+        .linkedin {
+            color: #38bdf8;
+        }
+
+
+        /* =========================
+           CARACTERÍSTICAS
+        ========================== */
+
+        .features {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap: 18px;
+
+            width: 100%;
+
+            max-width: 780px;
+
+            margin-top: 25px;
+        }
+
+
+        .feature {
+            padding: 22px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(15,23,42,.50);
+
+            border:
+                1px solid rgba(255,255,255,.08);
+
+            backdrop-filter:
+                blur(15px);
+
+            transition:
+                .35s;
+        }
+
+
+        .feature:hover {
+            transform:
+                translateY(-8px)
+                perspective(600px)
+                rotateX(3deg);
+
+            background:
+                rgba(30,41,59,.70);
+        }
+
+
+        .feature i {
+            font-size: 22px;
+
+            color: #60a5fa;
+
+            margin-bottom: 12px;
+        }
+
+
+        .feature h3 {
+            font-size: 15px;
+
+            margin-bottom: 6px;
+        }
+
+
+        .feature p {
+            color: #64748b;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================
+           LOADING
+        ========================== */
+
+        .loader {
+            width: 18px;
+            height: 18px;
+
+            border:
+                3px solid
+                rgba(255,255,255,.3);
+
+            border-top-color:
+                white;
+
+            border-radius: 50%;
+
+            display: inline-block;
+
+            animation:
+                spin .7s linear infinite;
+        }
+
+
+        @keyframes spin {
+            to {
+                transform:
+                    rotate(360deg);
+            }
+        }
+
+
+        @keyframes fadeUp {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+
+        @keyframes fadeDown {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    translateY(0);
+            }
+        }
+
+
+        @keyframes appear {
+
+            from {
+                opacity: 0;
+
+                transform:
+                    perspective(800px)
+                    rotateX(10deg)
+                    translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+
+                transform:
+                    perspective(800px)
+                    rotateX(0);
+            }
+        }
+
+
+        footer {
+            margin-top: 35px;
+
+            color: #475569;
+
+            font-size: 12px;
+
+            text-align: center;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media(max-width:700px) {
+
+            nav {
+                padding: 0 20px;
+            }
+
+            .nav-status {
+                display: none;
+            }
+
+            .download-card {
+                padding: 22px;
+            }
+
+            .input-container {
+                flex-direction: column;
+            }
+
+            .input-icon {
+                display: none;
+            }
+
+            input {
+                padding: 16px;
+            }
+
+            button {
+                min-height: 52px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                letter-spacing: -2px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="background">
+
+    <div class="orb orb1"></div>
+
+    <div class="orb orb2"></div>
+
+    <div class="orb orb3"></div>
+
+</div>
+
+
+<nav>
+
+    <div class="logo">
+
+        <div class="logo-icon">
+
+            <i class="fa-solid fa-play"></i>
+
+        </div>
+
+        MediaFlow
+
+    </div>
+
+
+    <div class="nav-status">
+
+        <div class="status-dot"></div>
+
+        Sistema operativo
+
+    </div>
+
+</nav>
+
+
+<main>
+
+    <div class="badge">
+
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+
+        Descargas multimedia inteligentes
+
+    </div>
+
+
+    <h1>
+
+        Descarga contenido
+
+        <span class="gradient-text">
+            sin complicaciones
+        </span>
+
+    </h1>
+
+
+    <p class="subtitle">
+
+        Ingresa el enlace del video y nuestra aplicación
+        procesará automáticamente el contenido disponible.
+
+    </p>
+
+
+    <div
+        class="download-card"
+        id="card"
+    >
+
+        <div class="download-title">
+
+            <i class="fa-solid fa-link"></i>
+
+            Ingresa la URL del video
+
+        </div>
+
+
+        <form
+            action="/download"
+            method="POST"
+            id="downloadForm"
+        >
+
+            <div class="input-container">
+
+                <div class="input-icon">
+
+                    <i class="fa-solid fa-globe"></i>
+
+                </div>
+
+
+                <input
+                    type="url"
+                    name="url"
+                    id="url"
+                    placeholder="https://youtube.com/watch?v=..."
+                    required
+                >
+
+
+                <button
+                    type="submit"
+                    id="downloadButton"
+                >
+
+                    <span id="buttonText">
+
+                        <i class="fa-solid fa-download"></i>
+
+                        Descargar
+
+                    </span>
+
+                </button>
+
+            </div>
+
+        </form>
+
+
+        <div class="platform-label">
+
+            Compatible con
+
+        </div>
+
+
+        <div class="platforms">
+
+            <div
+                class="platform youtube"
+                title="YouTube"
+            >
+
+                <i class="fa-brands fa-youtube"></i>
+
+            </div>
+
+
+            <div
+                class="platform instagram"
+                title="Instagram"
+            >
+
+                <i class="fa-brands fa-instagram"></i>
+
+            </div>
+
+
+            <div
+                class="platform tiktok"
+                title="TikTok"
+            >
+
+                <i class="fa-brands fa-tiktok"></i>
+
+            </div>
+
+
+            <div
+                class="platform facebook"
+                title="Facebook"
+            >
+
+                <i class="fa-brands fa-facebook-f"></i>
+
+            </div>
+
+
+            <div
+                class="platform linkedin"
+                title="LinkedIn"
+            >
+
+                <i class="fa-brands fa-linkedin-in"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <section class="features">
+
+        <div class="feature">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <h3>Procesamiento rápido</h3>
+
+            <p>
+                La aplicación detecta automáticamente
+                los formatos multimedia disponibles.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <i class="fa-solid fa-shield-halved"></i>
+
+            <h3>Arquitectura aislada</h3>
+
+            <p>
+                Preparada para ejecutarse posteriormente
+                dentro de un contenedor Docker.
+            </p>
+
+        </div>
+
+
+        <div class="feature">
+
+            <i class="fa-solid fa-layer-group"></i>
+
+            <h3>Multiplataforma</h3>
+
+            <p>
+                Diseñada para trabajar con distintos
+                servicios de contenido multimedia.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+
+        Proyecto de Desarrollo de Soluciones en la Nube
+        · Docker & Flask
+
+    </footer>
+
+</main>
+
+
+<script>
+
+    /* ==============================
+       EFECTO 3D DE LA TARJETA
+    =============================== */
+
+    const card =
+        document.getElementById("card");
+
+
+    card.addEventListener(
+        "mousemove",
+        (event) => {
+
+            const rect =
+                card.getBoundingClientRect();
+
+            const x =
+                event.clientX -
+                rect.left;
+
+            const y =
+                event.clientY -
+                rect.top;
+
+            const centerX =
+                rect.width / 2;
+
+            const centerY =
+                rect.height / 2;
+
+            const rotateX =
+                -(y - centerY) / 35;
+
+            const rotateY =
+                (x - centerX) / 35;
+
+
+            card.style.transform =
+                `perspective(900px)
+                 rotateX(${rotateX}deg)
+                 rotateY(${rotateY}deg)
+                 translateY(-3px)`;
+        }
+    );
+
+
+    card.addEventListener(
+        "mouseleave",
+        () => {
+
+            card.style.transform =
+                "perspective(900px) rotateX(0) rotateY(0)";
+        }
+    );
+
+
+    /* ==============================
+       ANIMACIÓN DEL BOTÓN
+    =============================== */
+
+    const form =
+        document.getElementById(
+            "downloadForm"
+        );
+
+    const button =
+        document.getElementById(
+            "downloadButton"
+        );
+
+    const buttonText =
+        document.getElementById(
+            "buttonText"
+        );
+
+
+    form.addEventListener(
+        "submit",
+        () => {
+
+            button.disabled = true;
+
+            buttonText.innerHTML =
+                `
+                <span class="loader"></span>
+                Procesando...
+                `;
+        }
+    );
+
+</script>
+
+</body>
+</html>

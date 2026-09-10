@@ -1,0 +1,25 @@
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+
+# Git
+.git/
+.gitignore
+
+# Archivos descargados
+downloads/*
+*.mp4
+*.webm
+*.part
+*.ytdl
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db

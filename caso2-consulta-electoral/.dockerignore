@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+
+venv/
+.venv/
+
+.git/
+.gitignore
+
+uploads/*
+resultados/*
+
+respuesta_onpe_*.html
+*.xlsx

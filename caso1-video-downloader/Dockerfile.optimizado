@@ -1,0 +1,50 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Evitar archivos .pyc y mejorar salida de logs
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Instalar solo paquetes necesarios
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    curl \
+    unzip \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalar Deno
+ARG DENO_VERSION=2.9.6
+
+RUN curl -fsSL \
+    "https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/deno-x86_64-unknown-linux-gnu.zip" \
+    -o /tmp/deno.zip \
+    && unzip /tmp/deno.zip -d /usr/local/bin \
+    && rm -f /tmp/deno.zip \
+    && chmod +x /usr/local/bin/deno
+
+# Copiar primero requirements para aprovechar caché
+COPY requirements.txt .
+
+# Instalar dependencias sin guardar caché
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar únicamente los archivos necesarios
+COPY app.py .
+COPY templates ./templates
+
+# Crear usuario sin privilegios
+RUN useradd --create-home appuser \
+    && mkdir -p /app/downloads \
+    && chown -R appuser:appuser /app
+
+USER appuser
+
+EXPOSE 5000
+
+# Verificar que Flask esté respondiendo
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/')" || exit 1
+
+CMD ["python", "app.py"]

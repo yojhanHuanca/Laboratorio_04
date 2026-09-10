@@ -1,0 +1,65 @@
+# =========================
+# ETAPA 1: BUILDER
+# =========================
+
+FROM python:3.11-slim AS builder
+
+WORKDIR /app
+
+COPY requirements.txt .
+
+RUN pip install \
+    --no-cache-dir \
+    --prefix=/install \
+    -r requirements.txt
+
+
+# =========================
+# ETAPA 2: FINAL
+# =========================
+
+FROM python:3.11-slim
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Instalar dependencias necesarias del sistema
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    curl \
+    unzip \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalar Deno
+ARG DENO_VERSION=2.9.6
+
+RUN curl -fsSL \
+    "https://github.com/denoland/deno/releases/download/v${DENO_VERSION}/deno-x86_64-unknown-linux-gnu.zip" \
+    -o /tmp/deno.zip \
+    && unzip /tmp/deno.zip -d /usr/local/bin \
+    && rm -f /tmp/deno.zip \
+    && chmod +x /usr/local/bin/deno
+
+# Copiar las librerías Python instaladas desde builder
+COPY --from=builder /install /usr/local
+
+# Copiar aplicación
+COPY app.py .
+COPY templates ./templates
+
+# Crear usuario no root
+RUN useradd --create-home appuser \
+    && mkdir -p /app/downloads \
+    && chown -R appuser:appuser /app
+
+USER appuser
+
+EXPOSE 5000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/')" || exit 1
+
+CMD ["python", "app.py"]
