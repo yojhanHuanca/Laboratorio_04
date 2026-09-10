@@ -5,6 +5,11 @@ Aplicación web desarrollada en **Python con Flask**, que permite descargar vide
 Este proyecto corresponde al **Caso 1 de la Práctica Calificada 1** del curso **Desarrollo de Soluciones en la Nube**, aplicando Docker para la contenerización y ejecución de la aplicación.
 
 ---
+▶️ **[Ver video demostrativo](https://youtu.be/gnO7grwFfsQ)**
+
+> El enlace permite acceder a la evidencia audiovisual del funcionamiento de los dos casos desarrollados.
+
+---
 
 ## 📌 Descripción del proyecto
 
@@ -222,9 +227,9 @@ Se realizó **un video demostrativo correspondiente al Caso 1: Descargador de Vi
 
 En el video se puede observar el ingreso de una URL, el procesamiento del contenido y la descarga del video mediante la aplicación desarrollada.
 
-▶️ **[Ver video demostrativo](PON-AQUI-EL-ENLACE-DEL-VIDEO)**
+▶️ **[Ver video demostrativo](https://youtu.be/gnO7grwFfsQ)**
 
-> El enlace permite acceder a la evidencia audiovisual del funcionamiento del proyecto.
+> El enlace permite acceder a la evidencia audiovisual del funcionamiento de los dos casos desarrollados.
 
 ---
 
