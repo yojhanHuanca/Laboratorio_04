@@ -83,7 +83,7 @@ caso1-video-downloader/
 ## 1. Clonar el repositorio
 
 ```bash
-git clone URL-DE-TU-REPOSITORIO
+git clone https://github.com/yojhanHuanca/Laboratorio_04.git
 ```
 
 Luego ingresar a la carpeta del proyecto:
